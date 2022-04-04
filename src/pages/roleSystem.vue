@@ -56,10 +56,9 @@
             <v-card class="mx-auto" max-width="600">
               <v-card-text class="text--primary">
                 <div>USER ID : 3</div>
-                <div>API URL : '/getSomeShit'</div>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="orange" text> SEND REQ </v-btn>
+                <v-btn color="orange" text @click="sendReq"> SEND REQ </v-btn>
               </v-card-actions>
             </v-card>
 
@@ -76,11 +75,40 @@
         </v-container>
       </v-card>
     </v-container>
+    <v-snackbar v-model="snackbar">
+      success
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <!-- <v-card-text class="text-left pl-10">
         Что это такое и зачем это нужно?\n
       </v-card-text> -->
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      snackbar: false,
+    };
+  },
+
+  methods: {
+    async sendReq() {
+      const res = await this.$axios.$post("getAviableApi", {
+        user_id: 3
+      });
+      if (res){
+        this.snackbar = true;
+        console.log(res);
+      }
+    },
+  },
+};
+</script>
 <style>
 /*.v-list-group .v-list-item .v-list-item {*/
 /*padding: 0;*/
