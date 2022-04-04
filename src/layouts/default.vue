@@ -1,11 +1,13 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
       fixed
+      class="no-print"
       app
+      permanent
     >
       <v-list>
         <v-list-item
@@ -29,33 +31,14 @@
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn
         icon
         @click.stop="miniVariant = !miniVariant"
       >
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
+
       <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -66,7 +49,6 @@
       v-model="rightDrawer"
       :right="right"
       temporary
-      fixed
     >
       <v-list>
         <v-list-item @click.native="right = !right">
@@ -89,6 +71,7 @@
 </template>
 
 <script>
+// import { mdiAccountDetailsOutline } from '@mdi/js';
 export default {
   data () {
     return {
@@ -102,15 +85,20 @@ export default {
           to: '/'
         },
         {
+          icon: 'mdi-account-group',
+          title: 'Role System',
+          to: '/roleSystem'
+        },
+        {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          title: 'test',
+          to: '/test'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Диплом'
     }
   }
 }
