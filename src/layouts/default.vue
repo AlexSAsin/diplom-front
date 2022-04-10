@@ -91,8 +91,8 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'test',
-          to: '/test'
+          title: 'Transaction',
+          to: '/transaction'
         }
       ],
       miniVariant: false,
