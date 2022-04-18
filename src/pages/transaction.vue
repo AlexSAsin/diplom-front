@@ -44,78 +44,144 @@
           </h2>
 
           <v-flex d-flex>
-            <p class="text-left pl-5 pr-10 pt-4">
-              В базе данных присутствуют три основные сущности: таблица &#9312;
-              "lots" отвечает за информацию о лотах, таблица &#9313; "buildings"
-              содержит информацию о строениях и таблица &#9314; "projects"
-              содержит информацию о проектах. Теперь рассмотрим их связи: у
-              одного проекта может быть множество строений, но при этом у одного
-              строения не может быть множество проектов, аналогично со
-              строениями и лотами. Такой тип отношения называется OneToMany
-              (один ко многим).
-            </p>
-            <img class="image-style" src="../assets/transaction.png" />
+            <div>
+              <p class="text-left pl-5 pr-10 pt-15">
+                В базе данных присутствуют три основные сущности:
+              </p>
+              <p class="text-left pl-7">
+                - таблица &#9312; "lots" отвечает за информацию о лотах;
+              </p>
+              <p class="text-left pl-7">
+                - таблица &#9313; "buildings" содержит информацию о строениях;
+              </p>
+              <p class="text-left pl-7">
+                - таблица &#9314; "projects" содержит информацию о проектах.
+              </p>
+              <p class="text-left pl-5 pr-10">
+                Теперь рассмотрим их связи. У одного проекта может быть
+                множество строений, но при этом у одного строения не может быть
+                множество проектов, аналогично со строениями и лотами. Такой тип
+                отношения называется OneToMany (один ко многим).
+              </p>
+            </div>
+            <img class="image-style-tr" src="../assets/transaction.png" />
           </v-flex>
           <v-divider></v-divider>
 
           <h2 class="text-left pb-5 pt-3">Реализация со стороны сервера:</h2>
 
-          <v-flex d-flex>
+          <v-flex d-flex class="pb-10">
             <div>
               <p class="text-left pl-5 pt-15">
+                В данном случае мы рассматриваем API, которая предназначена для
+                удаления лота.
+              </p>
+              <p class="text-left pl-5">
                 Рассмотрим код представленный на картинке справа:
               </p>
               <p class="text-left pl-7">
-                &#9312; - Получение url вызываемого API и ID текущего
-                пользователя.
+                &#9312; - Получение id удаляемого лота.
+              </p>
+              <p class="text-left pl-7">&#9313; - Создание транзакции.</p>
+              <p class="text-left pl-7">
+                &#9314; - Удаление лота (обновление атрибута withdrawn в таблице
+                lots).
               </p>
               <p class="text-left pl-7">
-                &#9313; - Получение массива доступных API для роли к которой
-                относится текущий пользователь.
+                &#9315; - Получение id строения у данного лота.
               </p>
               <p class="text-left pl-7">
-                &#9314; - Проверка наличия в массиве доступных API вызываемого
-                API. Если совпадение найдено, то у текущего пользователя есть
-                доступ.
+                &#9316; - Получение количества актуальных лотов у строения.
               </p>
               <p class="text-left pl-7">
-                &#9315; - Если совпадений не найдено, то текущего пользователя
-                нет доступа. Возвращаем статус ошибки 403 и сообщение об ошибке
-                доступа.
+                &#9317; - Если количество актуальных лотов больше 0, то
+                возвращаем сообщение об успешном удалении лота.
+              </p>
+              <p class="text-left pl-7">
+                &#9318; - Иначе аналогично проделываем шаги &#9314;, &#9315;,
+                &#9316;, &#9317; для строения, и проекта.
               </p>
             </div>
-            <img class="image-style-code" src="../assets/role_code.png" />
+            <img class="image-style-tr1" src="../assets/t_code.png" />
           </v-flex>
           <v-divider></v-divider>
           <h2 class="text-left pb-5 pt-3">Наглядное представление работы:</h2>
-          <v-flex d-flex md12>
-            <p class="text-left pl-5 pb-10">
-              В архитектуре "клиент-сервер" на стороне сервера содержатся API
-            </p>
+          <v-flex d-flex>
+            <div>
+              <p class="text-left pl-5 pt-15">
+                На текущий момент база данных имеет следующее состояние:
+              </p>
+              <p class="text-left pl-7">
+                &#9312; - Таблица lots содержит в себе 4 записи о лотах и лот с
+                id = 1, неактуален.
+              </p>
+              <p class="text-left pl-7">
+                &#9313; - Таблица buildings содержит в себе 2 записи о
+                строениях.
+              </p>
+              <p class="text-left pl-7">
+                &#9314; - Таблица projects содержит в себе 2 записи о проектах.
+              </p>
+            </div>
+            <img class="image-style-db" src="../assets/bd_tr.png" />
           </v-flex>
-          <v-container>
-            <v-row class="mx-auto">
-              <v-card class="mx-auto" max-width="600">
-                <v-card-text class="text--primary">
-                  <div>USER ID : 3</div>
-                  <div>{{ responce }}</div>
-                </v-card-text>
+          <v-flex d-flex mt-5>
+            <div>
+              <p class="text-left pl-7">
+                Теперь воспользуемся API и удалим лот с ID = 1
+              </p>
+              <v-card class="ml-7" max-width="120">
                 <v-card-actions>
-                  <v-btn color="orange" text @click="sendReq"> SEND REQ </v-btn>
+                  <v-btn color="orange" @click="getInfo" text>
+                    DELET LOT
+                  </v-btn>
                 </v-card-actions>
               </v-card>
-
-              <v-card class="mx-auto" max-width="600">
-                <v-card-text class="text--primary">
-                  <div>USER ID : 3</div>
-                  <div>API URL : '/getSomeShit'</div>
-                </v-card-text>
+            </div>
+          </v-flex>
+          <v-flex d-flex mt-5>
+            <div>
+              <p class="text-center">Лоты</p>
+              <v-data-table
+                :headers="headersL"
+                :items="lots"
+                class="ml-7"
+              ></v-data-table>
+            </div>
+            <div>
+              <p class="text-center">Строения</p>
+              <v-data-table
+                :headers="headersB"
+                :items="buildings"
+                class="ml-7"
+              ></v-data-table>
+            </div>
+            <div>
+              <p class="text-center">Проекты</p>
+              <v-data-table
+                :headers="headersP"
+                :items="projects"
+                class="ml-7"
+              ></v-data-table>
+            </div>
+          </v-flex>
+          <v-flex d-flex mt-5>
+            <div>
+              <p class="text-left pl-7">
+                Как мы можем заметить при удалении лота, так-же было удалено
+                строение к которму он относился и проект, к которому относилось
+                строение. Чтобы вернуть базу данных к исходному состоянию
+                необходимо нажать кнопку ниже.
+              </p>
+              <v-card class="ml-7" max-width="260">
                 <v-card-actions>
-                  <v-btn color="orange" text> SEND REQ </v-btn>
+                  <v-btn color="orange" @click="reset" text>
+                    return to original state
+                  </v-btn>
                 </v-card-actions>
               </v-card>
-            </v-row>
-          </v-container>
+            </div>
+          </v-flex>
         </v-card-text>
       </v-card>
     </v-container>
@@ -139,19 +205,52 @@ export default {
         local: "",
         avaibleApi: "",
       },
+      headersL: [
+        { text: "id", value: "id", sortable: false },
+        { text: "building_id", value: "building_id", sortable: false },
+        { text: "name", value: "name", sortable: false },
+        { text: "created", value: "created", sortable: false },
+        { text: "withdrawn", value: "withdrawn", sortable: false },
+      ],
+      headersB: [
+        { text: "id", value: "id", sortable: false },
+        { text: "project_id", value: "building_id", sortable: false },
+        { text: "name", value: "name", sortable: false },
+        { text: "created", value: "created", sortable: false },
+        { text: "withdrawn", value: "withdrawn", sortable: false },
+      ],
+      headersP: [
+        { text: "id", value: "id", sortable: false },
+        { text: "name", value: "name", sortable: false },
+        { text: "created", value: "created", sortable: false },
+        { text: "withdrawn", value: "withdrawn", sortable: false },
+      ],
+      lots: [],
+      buildings: [],
+      projects: [],
     };
   },
 
   methods: {
-    async sendReq() {
-      const res = await this.$axios.$post("getAviableApi", {
-        user_id: 3,
+    async getInfo() {
+      await this.$axios.$post("deleteLot", {
+        lot_id: 1,
       });
-      this.responce = res;
-      if (res) {
-        this.snackbar = true;
-        console.log(res);
-      }
+      const lots = await this.$axios.$post("getlots");
+      const buildings = await this.$axios.$post("getbuilding");
+      const projects = await this.$axios.$post("getproject");
+      this.lots = lots;
+      this.buildings = buildings;
+      this.projects = projects;
+    },
+    async reset() {
+      await this.$axios.$post("reload");
+      const lots = await this.$axios.$post("getlots");
+      const buildings = await this.$axios.$post("getbuilding");
+      const projects = await this.$axios.$post("getproject");
+      this.lots = lots;
+      this.buildings = buildings;
+      this.projects = projects;
     },
   },
 };
@@ -160,15 +259,22 @@ export default {
 /*.v-list-group .v-list-item .v-list-item {*/
 /*padding: 0;*/
 /*}*/
-.image-style {
+.image-style-tr {
   width: 450px !important;
   height: 470px !important;
-  margin-right: 300px;
+  margin-right: 500px;
   margin-left: 100px;
 }
-.image-style-code {
-  width: 780px !important;
-  height: 520px !important;
+.image-style-tr1 {
+  width: 640px !important;
+  height: 640px !important;
+  margin-right: 200px;
+  margin-left: 100px;
+}
+.image-style-db {
+  width: 800px !important;
+  height: 400px !important;
+  margin-right: 50px;
   margin-left: 100px;
 }
 </style>

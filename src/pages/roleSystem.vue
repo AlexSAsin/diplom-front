@@ -63,7 +63,8 @@
               <p class="text-left pl-7">
                 &#9314; - Проверка наличия в массиве доступных API вызываемого
                 API. Если совпадение найдено, то у текущего пользователя есть
-                доступ.
+                доступ и исполняется выбранная функция API, на рисунке этот
+                вызов проиллюстрирован строкой res.send(true)
               </p>
               <p class="text-left pl-7">
                 &#9315; - Если совпадений не найдено, то текущего пользователя
@@ -89,8 +90,17 @@
               <v-card class="mx-auto" max-width="300">
                 <v-card-text class="text--primary">
                   <div>
-                    <v-text-field v-model="userID1" label="USER ID"></v-text-field>
-                    <v-text-field readonly label="API" value="/getTest"></v-text-field>
+                    <v-select
+                      class="mt-4"
+                      :items="usersIds"
+                      v-model="userID1"
+                      label="USER ID"
+                    ></v-select>
+                    <v-text-field
+                      readonly
+                      label="API"
+                      value="/getTest"
+                    ></v-text-field>
                   </div>
                   <div>{{ responce1 }}</div>
                 </v-card-text>
@@ -104,8 +114,17 @@
               <v-card class="mx-auto" max-width="300">
                 <v-card-text class="text--primary">
                   <div>
-                    <v-text-field v-model="userID2" label="USER ID"></v-text-field>
-                    <v-text-field  readonly label="API" value="/getName"></v-text-field>
+                    <v-select
+                      class="mt-4"
+                      :items="usersIds"
+                      v-model="userID2"
+                      label="USER ID"
+                    ></v-select>
+                    <v-text-field
+                      readonly
+                      label="API"
+                      value="/getName"
+                    ></v-text-field>
                   </div>
                   <div>{{ responce2 }}</div>
                 </v-card-text>
@@ -145,8 +164,9 @@ export default {
         local: "",
         avaibleApi: "",
       },
-      userID1: '',
-      userID2: '',
+      userID1: "",
+      userID2: "",
+      usersIds: [2, 3],
     };
   },
 
