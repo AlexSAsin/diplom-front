@@ -45,7 +45,7 @@
 
           <v-flex d-flex>
             <div>
-              <p class="text-left pl-5 pr-10 pt-15">
+              <p class="text-left pl-5 pr-10 pt-10">
                 В базе данных присутствуют три основные сущности:
               </p>
               <p class="text-left pl-7">
@@ -58,7 +58,7 @@
                 - таблица &#9314; "projects" содержит информацию о проектах.
               </p>
               <p class="text-left pl-5 pr-10">
-                Теперь рассмотрим их связи. У одного проекта может быть
+                Теперь рассмотрим их связи: у одного проекта может быть
                 множество строений, но при этом у одного строения не может быть
                 множество проектов, аналогично со строениями и лотами. Такой тип
                 отношения называется OneToMany (один ко многим).
@@ -107,25 +107,15 @@
           <v-divider></v-divider>
           <h2 class="text-left pb-5 pt-3">Наглядное представление работы:</h2>
           <v-flex d-flex>
-            <div>
-              <p class="text-left pl-5 pt-15">
-                На текущий момент база данных имеет следующее состояние:
-              </p>
-              <p class="text-left pl-7">
-                &#9312; - Таблица lots содержит в себе 4 записи о лотах и лот с
-                id = 1, неактуален.
-              </p>
-              <p class="text-left pl-7">
-                &#9313; - Таблица buildings содержит в себе 2 записи о
-                строениях.
-              </p>
-              <p class="text-left pl-7">
-                &#9314; - Таблица projects содержит в себе 2 записи о проектах.
-              </p>
-            </div>
-            <img class="image-style-db" src="../assets/bd_tr.png" />
+            <p class="text-left pl-5">
+              На текущий момент база данных имеет следующее состояние: &#9312; -
+              таблица lots содержит в себе 4 записи о лотах и лот с id = 1,
+              неактуален; &#9313; - таблица buildings содержит в себе 2 записи о
+              строениях; &#9314; - таблица projects содержит в себе 2 записи о
+              проектах.
+            </p>
           </v-flex>
-          <v-flex d-flex mt-5>
+          <v-flex d-flex>
             <div>
               <p class="text-left pl-7">
                 Теперь воспользуемся API и удалим лот с ID = 1
@@ -139,7 +129,7 @@
               </v-card>
             </div>
           </v-flex>
-          <v-flex d-flex mt-5>
+          <v-flex d-flex mt-5 mr-5>
             <div>
               <p class="text-center">Лоты</p>
               <v-data-table
@@ -165,9 +155,10 @@
               ></v-data-table>
             </div>
           </v-flex>
+
           <v-flex d-flex mt-5>
             <div>
-              <p class="text-left pl-7">
+              <p class="text-left pl-7 mt-5">
                 Как мы можем заметить при удалении лота, так-же было удалено
                 строение к которму он относился и проект, к которому относилось
                 строение. Чтобы вернуть базу данных к исходному состоянию
@@ -196,6 +187,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -225,32 +217,54 @@ export default {
         { text: "created", value: "created", sortable: false },
         { text: "withdrawn", value: "withdrawn", sortable: false },
       ],
-      lots: [],
-      buildings: [],
-      projects: [],
     };
   },
 
+  computed: {
+    ...mapGetters({
+      lots: "getlots/get",
+      buildings: "getbuildings/get",
+      projects: "getprojects/get",
+    }),
+  },
+
+  async mounted() {
+    try {
+      await this.getDataFromApi();
+      return;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
   methods: {
+    ...mapActions({
+      getLots: "getlots/getLots",
+      getBuildings: "getbuildings/getBuildings",
+      getProjects: "getprojects/getProjects",
+    }),
+
+    async getDataFromApi() {
+      try {
+        await this.getLots();
+        await this.getBuildings();
+        await this.getProjects();
+        return;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+
     async getInfo() {
       await this.$axios.$post("deleteLot", {
         lot_id: 1,
       });
-      const lots = await this.$axios.$post("getlots");
-      const buildings = await this.$axios.$post("getbuilding");
-      const projects = await this.$axios.$post("getproject");
-      this.lots = lots;
-      this.buildings = buildings;
-      this.projects = projects;
+      await this.getDataFromApi();
     },
+
     async reset() {
       await this.$axios.$post("reload");
-      const lots = await this.$axios.$post("getlots");
-      const buildings = await this.$axios.$post("getbuilding");
-      const projects = await this.$axios.$post("getproject");
-      this.lots = lots;
-      this.buildings = buildings;
-      this.projects = projects;
+      await this.getDataFromApi();
     },
   },
 };
