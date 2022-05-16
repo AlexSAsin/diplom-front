@@ -29,11 +29,14 @@
                 переходит в статус "не в продаже", а у него при этом нет ни
                 одного лота, который сейчас продавался бы - то такое же
                 изменения статуса должен получить и связанный с ним проект.
-                Транзакция в таком случае нужна, что бы не получилось так, что
-                статус корпуса обновился, а связанних с ним лотов - нет. В
-                противном случае может оказаться, что ЖК находится в продаже,
-                корпус в продаже, но при этом нет ни одного лота,
-                соответствующего этим предложениям о продаже.
+              </p>
+              <p class="text-left pl-5">
+                Транзакция в таком случае нужна для сохранения целостности базы
+                данных, что бы не получилось так, что статус корпуса обновился,
+                а связанних с ним лотов - нет. В противном случае может
+                оказаться, что ЖК находится в продаже, корпус в продаже, но при
+                этом нет ни одного лота, соответствующего этим предложениям о
+                продаже.
               </p>
             </div>
           </v-flex>
@@ -45,7 +48,7 @@
 
           <v-flex d-flex>
             <div>
-              <p class="text-left pl-5 pr-10 pt-10">
+              <p class="text-left pl-5 pr-10 pt-5">
                 В базе данных присутствуют три основные сущности:
               </p>
               <p class="text-left pl-7">
@@ -120,15 +123,33 @@
               <p class="text-left pl-7">
                 Теперь воспользуемся API и удалим лот с ID = 1
               </p>
-              <v-card class="ml-7" max-width="120">
-                <v-card-actions>
-                  <v-btn color="orange" @click="getInfo" text>
-                    DELET LOT
+            </div>
+          </v-flex>
+          <v-container class="pb-10">
+            <v-row>
+              <v-card class="mx-auto" max-width="300">
+                <v-card-text class="text--primary">
+                  <h3 class="text-center pb-5">correct API</h3>
+                </v-card-text>
+                <v-card-actions class="justify-center">
+                  <v-btn elevation="7" color="orange" text @click="getInfo">
+                    DELETE LOT
                   </v-btn>
                 </v-card-actions>
               </v-card>
-            </div>
-          </v-flex>
+
+              <v-card class="mx-auto" max-width="300">
+                <v-card-text class="text--primary">
+                  <h3 class="text-center pb-5">incorrect API</h3>
+                </v-card-text>
+                <v-card-actions class="justify-center">
+                  <v-btn elevation="7" color="orange" text @click="getInfo2">
+                    DELETE LOT
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-row>
+          </v-container>
           <v-flex d-flex mt-5 mr-5>
             <div>
               <p class="text-center">Лоты</p>
@@ -159,9 +180,11 @@
           <v-flex d-flex mt-5>
             <div>
               <p class="text-left pl-7 mt-5">
-                Как мы можем заметить при удалении лота, так-же было удалено
-                строение к которму он относился и проект, к которому относилось
-                строение. Чтобы вернуть базу данных к исходному состоянию
+                Как мы можем заметить когда мы вызывали корректный API при
+                удалении лота, так-же было удалено строение к которму он
+                относился и проект, к которому относилось строение. А при вызове
+                некорректого был удален только лот, что нарушило целостность
+                базы данных Чтобы вернуть базу данных к исходному состоянию
                 необходимо нажать кнопку ниже.
               </p>
               <v-card class="ml-7" max-width="260">
@@ -176,14 +199,6 @@
         </v-card-text>
       </v-card>
     </v-container>
-    <v-snackbar v-model="snackbar">
-      success
-      <template v-slot:action="{ attrs }">
-        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 <script>
@@ -262,6 +277,13 @@ export default {
       await this.getDataFromApi();
     },
 
+    async getInfo2() {
+      await this.$axios.$post("deleteLotInec", {
+        lot_id: 1,
+      });
+      await this.getDataFromApi();
+    },
+
     async reset() {
       await this.$axios.$post("reload");
       await this.getDataFromApi();
@@ -274,8 +296,14 @@ export default {
 /*padding: 0;*/
 /*}*/
 .image-style-tr {
-  width: 450px !important;
-  height: 470px !important;
+  width: 400px !important;
+  height: 400px !important;
+  margin-right: 400px;
+  margin-left: 100px;
+}
+.image-style-ch {
+  width: 320px !important;
+  height: 300px !important;
   margin-right: 500px;
   margin-left: 100px;
 }

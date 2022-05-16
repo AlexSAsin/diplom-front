@@ -90,9 +90,15 @@ export default {
           to: '/roleSystem'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-arrow-split-vertical',
           title: 'Transaction',
           to: '/transaction'
+        }
+        ,
+        {
+          icon: 'mdi-call-merge',
+          title: 'Injection',
+          to: '/injection'
         }
       ],
       miniVariant: false,

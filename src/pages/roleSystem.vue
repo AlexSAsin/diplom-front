@@ -33,7 +33,8 @@
                 В базе данных присутствуют три основные сущности:
               </p>
               <p class="text-left pl-8 pr-10">
-                &#9312; - таблица  "users" отвечает за информацию о пользователях;
+                &#9312; - таблица "users" отвечает за информацию о
+                пользователях;
               </p>
               <p class="text-left pl-8 pr-10">
                 &#9313; - таблица "role" содержит список ролей;
@@ -45,11 +46,13 @@
                 Теперь рассмотрим их связи: у одного пользователя может быть
                 множество ролей, но и у одной роли может быть множество
                 пользователй, так-же у одной роли может быть множество API, но и
-                у одного API может быть несколько ролей. Такой тип отношения
-                называется ManyToMany (многие ко многим) и в рамках реляционной
-                теории описывается связующей таблицей с внешними ключами (для
-                ограничения целостности данных). Такими связующими таблицами
-                являются: "users_to_role" и "role_apiList"
+                у одного API может быть несколько ролей.
+              </p>
+              <p class="text-left pl-5 pr-10">
+                Такой тип отношения называется ManyToMany (многие ко многим) и в
+                рамках реляционной теории описывается связующей таблицей с
+                внешними ключами (для ограничения целостности данных). Такими
+                связующими таблицами являются: "users_to_role" и "role_apiList"
               </p>
             </div>
             <img class="image-style" src="../assets/role.png" />
@@ -60,7 +63,7 @@
 
           <v-flex d-flex>
             <div>
-              <p class="text-left pl-5 pt-15">
+              <p class="text-left pl-5 pt-7">
                 Рассмотрим код представленный на картинке справа:
               </p>
               <p class="text-left pl-7">
@@ -100,6 +103,7 @@
             <v-row class="mx-auto">
               <v-card class="mx-auto" max-width="300">
                 <v-card-text class="text--primary">
+                  <h3 class="text-center pb-5">correct API</h3>
                   <div>
                     <v-select
                       class="mt-4"
@@ -124,6 +128,7 @@
 
               <v-card class="mx-auto" max-width="300">
                 <v-card-text class="text--primary">
+                  <h3 class="text-center pb-5">incorrect API</h3>
                   <div>
                     <v-select
                       class="mt-4"
@@ -147,17 +152,20 @@
               </v-card>
             </v-row>
           </v-container>
+          <v-flex d-flex mt-5>
+            <div>
+              <p class="text-left pl-7 mt-5">
+                Как мы можем заметить когда мы вызывали некорректный API в обоих
+                случаях вернулось true, что соответствует об успешном доступе. А
+                при вызове корректного с ID=3 нарушения доступа не произошло и в
+                качестве ответа вернулись: ошибка, статус и список доступных
+                API.
+              </p>
+            </div>
+          </v-flex>
         </v-card-text>
       </v-card>
     </v-container>
-    <v-snackbar v-model="snackbar">
-      success
-      <template v-slot:action="{ attrs }">
-        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 <script>
@@ -194,7 +202,7 @@ export default {
     },
     async callgetName() {
       const res = await this.$axios.$post("getName", {
-        user_id: this.userID2,
+        user_id: 3,
       });
       this.responce2 = res;
       if (res) {
@@ -206,9 +214,6 @@ export default {
 };
 </script>
 <style>
-/*.v-list-group .v-list-item .v-list-item {*/
-/*padding: 0;*/
-/*}*/
 .image-style {
   width: 450px !important;
   height: 470px !important;
@@ -216,8 +221,9 @@ export default {
   margin-left: 100px;
 }
 .image-style-code {
-  width: 780px !important;
-  height: 520px !important;
+  width: 680px !important;
+  height: 420px !important;
   margin-left: 100px;
+  margin-right: 70px;
 }
 </style>
